@@ -1,6 +1,7 @@
 MIT License
 
-Copyright (c) [2018] [Danil Salakheev]
+Copyright for portions of project shader.kt are held by [Danil Salakheev] [2018] as part of project kotlin-glsl.
+All other copyright for project shader.kt are held by [István Horváth] [2023].
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
