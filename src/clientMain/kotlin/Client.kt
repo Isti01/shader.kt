@@ -1,10 +1,17 @@
+import com.salakheev.shaderbuilderkt.ShaderProgram
 import com.salakheev.shaderbuilderkt.examples.SimpleFragmentShader
+import com.salakheev.shaderbuilderkt.examples.SimpleVertexShader
 import kotlinx.browser.document
+import react.create
+import react.dom.client.createRoot
 
 fun main() {
-    val pre = document.createElement("pre")
-    val code = document.createElement("code")
-    pre.appendChild(code)
-    code.innerHTML = SimpleFragmentShader(alphaTest = true, receiveShadow = true).getSource()
-    document.body?.appendChild(pre) ?: println("Failed to attach element to body")
+    val shaderProgram = ShaderProgram(
+        fragmentShader = SimpleFragmentShader(alphaTest = true, receiveShadow = true),
+        vertexShader = SimpleVertexShader(true)
+    )
+    val app = ShaderktApp.create {
+        shader = shaderProgram
+    }
+    createRoot(document.getElementById("root")!!).render(app)
 }
