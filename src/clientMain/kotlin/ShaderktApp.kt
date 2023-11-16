@@ -1,5 +1,5 @@
 import com.salakheev.shaderbuilderkt.ShaderProgram
-import components.InstructionVisualization
+import components.ShaderOutline
 import react.FC
 import react.Props
 
@@ -8,5 +8,5 @@ external interface ShaderktAppProps : Props {
 }
 
 val ShaderktApp = FC<ShaderktAppProps> { props ->
-    InstructionVisualization { fragmentShader = props.shader.fragmentShader }
+    ShaderOutline { fragmentShader = props.shader.fragmentShader }
 }
