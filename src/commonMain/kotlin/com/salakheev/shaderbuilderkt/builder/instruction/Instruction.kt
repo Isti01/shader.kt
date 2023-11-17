@@ -2,8 +2,13 @@ package com.salakheev.shaderbuilderkt.builder.instruction
 
 import com.salakheev.shaderbuilderkt.builder.delegates.UNUSED_DEFINITION_KEY
 
-data class Instruction(val type: InstructionType, var result: String = "") {
+data class Instruction(
+    val type: InstructionType,
+    var result: String = "",
+    val id: String = instanceCount++.toString()
+) {
     companion object {
+        private var instanceCount: Int = 0
         fun assign(left: String?, right: String?): Instruction {
             return Instruction(InstructionType.ASSIGN, "$left = $right")
         }
