@@ -5,14 +5,18 @@ import com.salakheev.shaderbuilderkt.builder.instruction.InstructionType
 import com.salakheev.shaderbuilderkt.builder.types.Variable
 import kotlin.reflect.KProperty
 
+
+const val UNUSED_DEFINITION_KEY = "{{unused_def}}"
+
+
 class ConstructorDelegate<T : Variable>(private val v: T, initialValue: String? = null) {
     private var define: Instruction
     private var defined: Boolean = false
 
     init {
-        val definitionString = "${v.typeName} {def} ${getInitializerExpr(initialValue)}"
+        val definitionString = "${v.typeName} ${UNUSED_DEFINITION_KEY}${getInitializerExpr(initialValue)}"
         define = Instruction(InstructionType.DEFINE, definitionString)
-        v.builder.instructions.add(define)
+        v.builder.addInstruction(define)
     }
 
     operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): ConstructorDelegate<T> {
@@ -22,7 +26,7 @@ class ConstructorDelegate<T : Variable>(private val v: T, initialValue: String? 
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
         if (!defined) {
-            define.result = define.result.replace("{def}", property.name)
+            define.result = define.result.replace(UNUSED_DEFINITION_KEY, property.name)
             defined = true
         }
         return v
@@ -30,10 +34,10 @@ class ConstructorDelegate<T : Variable>(private val v: T, initialValue: String? 
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         if (!defined) {
-            define.result = define.result.replace("{def}", property.name)
+            define.result = define.result.replace(UNUSED_DEFINITION_KEY, property.name)
             defined = true
         }
-        v.builder.instructions.add(Instruction.assign(property.name, value.value))
+        v.builder.addInstruction(Instruction.assign(property.name, value.value))
     }
 
     private fun getInitializerExpr(initialValue: String?): String {

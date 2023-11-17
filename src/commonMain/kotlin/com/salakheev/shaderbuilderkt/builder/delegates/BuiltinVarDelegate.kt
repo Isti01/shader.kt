@@ -21,6 +21,6 @@ class BuiltinVarDelegate {
     }
 
     operator fun setValue(thisRef: ShaderBuilder, property: KProperty<*>, value: Vec4) {
-        thisRef.instructions.add(Instruction.assign(property.name, value.value))
+        thisRef.addInstruction(Instruction.assign(property.name, value.value))
     }
 }

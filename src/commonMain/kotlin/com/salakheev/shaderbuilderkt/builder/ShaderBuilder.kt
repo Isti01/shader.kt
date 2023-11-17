@@ -1,8 +1,8 @@
 package com.salakheev.shaderbuilderkt.builder
 
-import com.salakheev.shaderbuilderkt.builder.instruction.InstructionType.*
 import com.salakheev.shaderbuilderkt.builder.delegates.*
 import com.salakheev.shaderbuilderkt.builder.instruction.Instruction
+import com.salakheev.shaderbuilderkt.builder.instruction.InstructionType.*
 import com.salakheev.shaderbuilderkt.builder.types.BoolResult
 import com.salakheev.shaderbuilderkt.builder.types.GenType
 import com.salakheev.shaderbuilderkt.builder.types.Variable
@@ -24,11 +24,15 @@ abstract class ShaderBuilder : ShaderSourceProvider {
     val uniforms = HashSet<String>()
     val attributes = HashSet<String>()
     val varyings = HashSet<String>()
-    val instructions = ArrayList<Instruction>()
+
+    private val _instructions = ArrayList<Instruction>()
+    open val instructions: List<Instruction> get() = _instructions
 
     protected var gl_Position by BuiltinVarDelegate()
     protected var gl_FragCoord by BuiltinVarDelegate()
     protected var gl_FragColor by BuiltinVarDelegate()
+
+    fun addInstruction(instruction: Instruction) = _instructions.add(instruction)
 
     protected fun <T : Variable> varying(factory: (ShaderBuilder) -> T) = VaryingDelegate(factory)
     protected fun <T : Variable> attribute(factory: (ShaderBuilder) -> T) = AttributeDelegate(factory)
@@ -38,24 +42,24 @@ abstract class ShaderBuilder : ShaderSourceProvider {
 
     protected fun <T : Variable> samplersArray(size: Int) = UniformArrayDelegate(size, ::Sampler2DArray)
 
-    protected fun discard() = instructions.add(Instruction(DISCARD))
+    protected fun discard() = addInstruction(Instruction(DISCARD))
 
     protected fun If(condition: BoolResult, body: () -> Unit) {
-        instructions.add(Instruction(IF, condition.value))
+        addInstruction(Instruction(IF, condition.value))
         body()
-        instructions.add(Instruction(ENDIF))
+        addInstruction(Instruction(ENDIF))
     }
 
     protected fun ElseIf(condition: BoolResult, body: () -> Unit) {
-        instructions.add(Instruction(ELSEIF, condition.value))
+        addInstruction(Instruction(ELSEIF, condition.value))
         body()
-        instructions.add(Instruction(ENDIF))
+        addInstruction(Instruction(ENDIF))
     }
 
     protected fun Else(body: () -> Unit) {
-        instructions.add(Instruction(ELSE))
+        addInstruction(Instruction(ELSE))
         body()
-        instructions.add(Instruction(ENDIF))
+        addInstruction(Instruction(ENDIF))
     }
 
     protected fun castMat3(m: Mat4) = Mat3(this, "mat3(${m.value})")

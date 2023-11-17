@@ -25,6 +25,6 @@ class VaryingDelegate<T : Variable>(private val factory: (ShaderBuilder) -> T) {
 
     operator fun setValue(thisRef: ShaderBuilder, property: KProperty<*>, value: T) {
         thisRef.varyings.add("${v.typeName} ${property.name}")
-        thisRef.instructions.add(Instruction.assign(property.name, value.value))
+        thisRef.addInstruction(Instruction.assign(property.name, value.value))
     }
 }

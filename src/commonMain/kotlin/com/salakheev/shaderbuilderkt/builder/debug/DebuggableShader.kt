@@ -1,13 +1,17 @@
 package com.salakheev.shaderbuilderkt.builder.debug
 
 import com.salakheev.shaderbuilderkt.builder.ShaderBuilder
-import com.salakheev.shaderbuilderkt.builder.instruction.InstructionType
+import com.salakheev.shaderbuilderkt.builder.debug.breakpoint.Breakpoint
+import com.salakheev.shaderbuilderkt.builder.debug.breakpoint.UnsetBreakpoint
+import com.salakheev.shaderbuilderkt.builder.instruction.Instruction
 
-abstract class DebuggableShader() : ShaderBuilder() {
+abstract class DebuggableShader : ShaderBuilder() {
+
+    var breakpoint: Breakpoint = UnsetBreakpoint
+    override val instructions: MutableList<Instruction>
+        get() = ArrayList(super.instructions.filter { !it.isUnusedDefinition() })
 
     override fun getSource(): String {
-        removeUnusedDefinitions()
-
         val sb = StringBuilder()
         sb.append(createDeclarations())
 
@@ -20,45 +24,22 @@ abstract class DebuggableShader() : ShaderBuilder() {
 
     private fun createDeclarations(): StringBuilder {
         val sb = StringBuilder()
-        uniforms.forEach {
-            sb.append("uniform $it;\n")
+        uniforms.union(breakpoint.uniforms).forEach {
+            sb.append("uniform $it;\n\n")
         }
         attributes.forEach {
-            sb.append("attribute $it;\n")
+            sb.append("attribute $it;\n\n")
         }
         varyings.forEach {
-            sb.append("\nvarying $it;\n")
+            sb.append("varying $it;\n\n")
         }
         return sb
     }
 
     private fun createMainBody(): StringBuilder {
         val sb = StringBuilder()
-        instructions.forEach {
-            val instructionString = when (it.type) {
-                InstructionType.DEFINE, InstructionType.ASSIGN -> "${it.result};"
-                InstructionType.IF -> {
-                    "if (${it.result}) {"
-                }
-
-                InstructionType.ELSEIF -> {
-                    "else if (${it.result}) {"
-                }
-
-                InstructionType.ELSE -> {
-                    "else {"
-                }
-
-                InstructionType.ENDIF -> "}"
-                InstructionType.DISCARD -> "discard;"
-            }
-            sb.append(instructionString)
-            sb.append('\n')
-        }
+        val interceptedInstructions = breakpoint.emitInstructions(instructions)
+        interceptedInstructions.forEach(sb::append)
         return sb
-    }
-
-    private fun removeUnusedDefinitions() {
-        instructions.removeAll { it.result.contains("{def}") }
     }
 }

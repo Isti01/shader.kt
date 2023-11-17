@@ -12,13 +12,14 @@ external interface ShaderOutlineProps : Props {
 }
 
 val ShaderOutline = FC<ShaderOutlineProps> { props ->
-    for (instruction in props.fragmentShader.instructions) {
+    val instructions = props.fragmentShader.instructions
+    for (instruction in instructions) {
         console.log(instruction)
         div {
             css {
                 padding = 5.px
             }
-            +("${instruction.type} - ${instruction.result}")
+            +("${instruction.type} - $instruction")
         }
     }
 }

@@ -18,6 +18,7 @@ class SimpleFragmentShader(alphaTest: Boolean, receiveShadow: Boolean) : Debugga
 
     init {
         var color by vec4()
+        var color2 by vec4()
         color = texture2D(texture, vUV)
         if (alphaTest) {
             If(color.w lt alphaTestThreshold) {

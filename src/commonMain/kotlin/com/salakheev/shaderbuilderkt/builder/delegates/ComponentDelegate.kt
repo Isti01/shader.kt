@@ -24,6 +24,6 @@ class ComponentDelegate<T : Variable>(private val factory: (ShaderBuilder) -> T)
         if (v.value == null) {
             v.value = "${thisRef.value}.${property.name}"
         }
-        thisRef.builder.instructions.add(Instruction.assign(v.value, value.value))
+        thisRef.builder.addInstruction(Instruction.assign(v.value, value.value))
     }
 }

@@ -30,6 +30,6 @@ class MatrixColumnDelegate<T : Variable>(
         if (v.value == null) {
             v.value = "${thisRef.value}[$index]"
         }
-        thisRef.builder.instructions.add(Instruction.assign(v.value, value.value))
+        thisRef.builder.addInstruction(Instruction.assign(v.value, value.value))
     }
 }
