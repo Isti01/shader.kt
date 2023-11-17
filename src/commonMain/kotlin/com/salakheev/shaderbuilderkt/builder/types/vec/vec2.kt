@@ -2,10 +2,10 @@ package com.salakheev.shaderbuilderkt.builder.types.vec
 
 import com.salakheev.shaderbuilderkt.builder.ShaderBuilder
 import com.salakheev.shaderbuilderkt.builder.delegates.ComponentDelegate
-import com.salakheev.shaderbuilderkt.builder.str
 import com.salakheev.shaderbuilderkt.builder.types.Vector
 import com.salakheev.shaderbuilderkt.builder.types.scalar.GLFloat
 import com.salakheev.shaderbuilderkt.builder.types.scalar.floatComponent
+import com.salakheev.shaderbuilderkt.builder.util.str
 
 class Vec2(override val builder: ShaderBuilder) : Vector {
     override val typeName: String = "vec2"

@@ -1,9 +1,9 @@
 package com.salakheev.shaderbuilderkt.builder.types.mat
 
 import com.salakheev.shaderbuilderkt.builder.ShaderBuilder
-import com.salakheev.shaderbuilderkt.builder.str
 import com.salakheev.shaderbuilderkt.builder.types.Matrix
 import com.salakheev.shaderbuilderkt.builder.types.vec.Vec2
+import com.salakheev.shaderbuilderkt.builder.util.str
 
 class Mat2(override val builder: ShaderBuilder) : Matrix {
 

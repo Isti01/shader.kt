@@ -2,9 +2,9 @@ package com.salakheev.shaderbuilderkt.builder.types.scalar
 
 import com.salakheev.shaderbuilderkt.builder.ShaderBuilder
 import com.salakheev.shaderbuilderkt.builder.delegates.ComponentDelegate
-import com.salakheev.shaderbuilderkt.builder.str
 import com.salakheev.shaderbuilderkt.builder.types.BoolResult
 import com.salakheev.shaderbuilderkt.builder.types.GenType
+import com.salakheev.shaderbuilderkt.builder.util.str
 
 class GLFloat(override val builder: ShaderBuilder) : GenType {
 

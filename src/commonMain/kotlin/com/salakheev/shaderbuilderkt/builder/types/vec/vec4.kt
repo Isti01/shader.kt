@@ -1,10 +1,10 @@
 package com.salakheev.shaderbuilderkt.builder.types.vec
 
 import com.salakheev.shaderbuilderkt.builder.ShaderBuilder
-import com.salakheev.shaderbuilderkt.builder.str
 import com.salakheev.shaderbuilderkt.builder.types.Vector
 import com.salakheev.shaderbuilderkt.builder.types.scalar.GLFloat
 import com.salakheev.shaderbuilderkt.builder.types.scalar.floatComponent
+import com.salakheev.shaderbuilderkt.builder.util.str
 
 @Suppress("unused")
 class Vec4(override val builder: ShaderBuilder) : Vector {

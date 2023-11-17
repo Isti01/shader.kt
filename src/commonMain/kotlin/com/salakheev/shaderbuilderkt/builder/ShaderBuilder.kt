@@ -1,7 +1,8 @@
 package com.salakheev.shaderbuilderkt.builder
 
-import com.salakheev.shaderbuilderkt.builder.InstructionType.*
+import com.salakheev.shaderbuilderkt.builder.instruction.InstructionType.*
 import com.salakheev.shaderbuilderkt.builder.delegates.*
+import com.salakheev.shaderbuilderkt.builder.instruction.Instruction
 import com.salakheev.shaderbuilderkt.builder.types.BoolResult
 import com.salakheev.shaderbuilderkt.builder.types.GenType
 import com.salakheev.shaderbuilderkt.builder.types.Variable
@@ -15,25 +16,8 @@ import com.salakheev.shaderbuilderkt.builder.types.scalar.GLInt
 import com.salakheev.shaderbuilderkt.builder.types.vec.Vec2
 import com.salakheev.shaderbuilderkt.builder.types.vec.Vec3
 import com.salakheev.shaderbuilderkt.builder.types.vec.Vec4
+import com.salakheev.shaderbuilderkt.builder.util.str
 import com.salakheev.shaderbuilderkt.sources.ShaderSourceProvider
-
-enum class InstructionType {
-    DEFINE,
-    ASSIGN,
-    IF,
-    ELSEIF,
-    ELSE,
-    ENDIF,
-    DISCARD
-}
-
-data class Instruction(val type: InstructionType, var result: String = "") {
-    companion object {
-        fun assign(left: String?, right: String?): Instruction {
-            return Instruction(ASSIGN, "$left = $right")
-        }
-    }
-}
 
 @Suppress("PropertyName", "FunctionName", "unused")
 abstract class ShaderBuilder : ShaderSourceProvider {
@@ -45,57 +29,6 @@ abstract class ShaderBuilder : ShaderSourceProvider {
     protected var gl_Position by BuiltinVarDelegate()
     protected var gl_FragCoord by BuiltinVarDelegate()
     protected var gl_FragColor by BuiltinVarDelegate()
-
-    override fun getSource(): String {
-        removeUnusedDefinitions()
-
-        val sb = StringBuilder()
-        uniforms.forEach {
-            sb.append("uniform $it;\n")
-        }
-        attributes.forEach {
-            sb.append("attribute $it;\n")
-        }
-        varyings.forEach {
-            sb.append("\nvarying $it;\n")
-        }
-
-        sb.append("void main(void) {\n")
-        instructions.forEach {
-            val instructionString = when (it.type) {
-                DEFINE, ASSIGN -> "${it.result};"
-                IF -> {
-                    "if (${it.result}) {"
-                }
-
-                ELSEIF -> {
-                    "else if (${it.result}) {"
-                }
-
-                ELSE -> {
-                    "else {"
-                }
-
-                ENDIF -> "}"
-                DISCARD -> "discard;"
-            }
-            sb.append(instructionString)
-            sb.append('\n')
-        }
-        sb.append("}\n")
-        return sb.toString()
-    }
-
-    fun appendComponent(builder: ShaderBuilderComponent) {
-        uniforms.addAll(builder.uniforms)
-        attributes.addAll(builder.attributes)
-        varyings.addAll(builder.varyings)
-        instructions.addAll(builder.instructions)
-    }
-
-    private fun removeUnusedDefinitions() {
-        instructions.removeAll { it.result.contains("{def}") }
-    }
 
     protected fun <T : Variable> varying(factory: (ShaderBuilder) -> T) = VaryingDelegate(factory)
     protected fun <T : Variable> attribute(factory: (ShaderBuilder) -> T) = AttributeDelegate(factory)
@@ -382,9 +315,5 @@ abstract class ShaderBuilder : ShaderSourceProvider {
     operator fun Float.plus(a: GLFloat) = GLFloat(a.builder, "(${this.str()} + ${a.value})")
 }
 
-fun Float.str(): String {
-    val r = "$this"
-    return if (r.contains(".")) r else "$r.0"
-}
 
-abstract class ShaderBuilderComponent : ShaderBuilder()
+

@@ -1,6 +1,6 @@
 package com.salakheev.shaderbuilderkt.builder.delegates
 
-import com.salakheev.shaderbuilderkt.builder.Instruction
+import com.salakheev.shaderbuilderkt.builder.instruction.Instruction
 import com.salakheev.shaderbuilderkt.builder.ShaderBuilder
 import com.salakheev.shaderbuilderkt.builder.types.vec.Vec4
 import kotlin.reflect.KProperty

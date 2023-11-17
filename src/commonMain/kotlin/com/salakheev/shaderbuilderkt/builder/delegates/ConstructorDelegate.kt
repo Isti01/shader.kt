@@ -1,7 +1,7 @@
 package com.salakheev.shaderbuilderkt.builder.delegates
 
-import com.salakheev.shaderbuilderkt.builder.Instruction
-import com.salakheev.shaderbuilderkt.builder.InstructionType
+import com.salakheev.shaderbuilderkt.builder.instruction.Instruction
+import com.salakheev.shaderbuilderkt.builder.instruction.InstructionType
 import com.salakheev.shaderbuilderkt.builder.types.Variable
 import kotlin.reflect.KProperty
 
