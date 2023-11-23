@@ -4,7 +4,7 @@ import com.salakheev.shaderbuilderkt.builder.delegates.*
 import com.salakheev.shaderbuilderkt.builder.instruction.Instruction
 import com.salakheev.shaderbuilderkt.builder.instruction.InstructionType.*
 import com.salakheev.shaderbuilderkt.builder.types.BoolResult
-import com.salakheev.shaderbuilderkt.builder.types.GenType
+import com.salakheev.shaderbuilderkt.builder.types.Symbol
 import com.salakheev.shaderbuilderkt.builder.types.Variable
 import com.salakheev.shaderbuilderkt.builder.types.mat.Mat3
 import com.salakheev.shaderbuilderkt.builder.types.mat.Mat4
@@ -21,9 +21,14 @@ import com.salakheev.shaderbuilderkt.sources.ShaderSourceProvider
 
 @Suppress("PropertyName", "FunctionName", "unused")
 abstract class ShaderBuilder : ShaderSourceProvider {
+    companion object {
+        const val FRAG_COLOR_VARIABLE = "gl_FragColor"
+    }
+
     val uniforms = HashSet<String>()
     val attributes = HashSet<String>()
     val varyings = HashSet<String>()
+    val symbols = ArrayList<Symbol>()
 
     private val _instructions = ArrayList<Instruction>()
     open val instructions: List<Instruction> get() = _instructions
@@ -33,6 +38,7 @@ abstract class ShaderBuilder : ShaderSourceProvider {
     protected var gl_FragColor by BuiltinVarDelegate()
 
     fun addInstruction(instruction: Instruction) = _instructions.add(instruction)
+    fun addSymbol(symbol: Symbol) = symbols.add(symbol)
 
     protected fun <T : Variable> varying(factory: (ShaderBuilder) -> T) = VaryingDelegate(factory)
     protected fun <T : Variable> attribute(factory: (ShaderBuilder) -> T) = AttributeDelegate(factory)
@@ -230,15 +236,15 @@ abstract class ShaderBuilder : ShaderSourceProvider {
     protected fun smoothstep(v: Vec3, u: Vec3, x: Vec3) = Vec3(this, "smoothstep(${v.value}, ${u.value}, ${x.value})")
     protected fun smoothstep(v: Vec4, u: Vec4, x: Vec4) = Vec4(this, "smoothstep(${v.value}, ${u.value}, ${x.value})")
 
-    protected fun length(v: GenType) = GLFloat(this, "length(${v.value})")
-    protected fun distance(a: GenType, b: GenType) = GLFloat(this, "distance(${a.value}, ${b.value})")
-    protected fun dot(a: GenType, b: GenType) = GLFloat(this, "dot(${a.value}, ${b.value})")
+    protected fun length(v: Symbol) = GLFloat(this, "length(${v.value})")
+    protected fun distance(a: Symbol, b: Symbol) = GLFloat(this, "distance(${a.value}, ${b.value})")
+    protected fun dot(a: Symbol, b: Symbol) = GLFloat(this, "dot(${a.value}, ${b.value})")
     protected fun cross(a: Vec3, b: Vec3) = Vec3(this, "dot(${a.value}, ${b.value})")
     protected fun normalize(v: GLFloat) = GLFloat(this, "normalize(${v.value})")
     protected fun normalize(v: Vec3) = Vec3(this, "normalize(${v.value})")
     protected fun normalize(v: Vec4) = Vec4(this, "normalize(${v.value})")
-    protected fun reflect(i: GenType, n: GenType) = Vec3(this, "reflect(${i.value}, ${n.value})")
-    protected fun refract(i: GenType, n: GenType, eta: GLFloat) =
+    protected fun reflect(i: Symbol, n: Symbol) = Vec3(this, "reflect(${i.value}, ${n.value})")
+    protected fun refract(i: Symbol, n: Symbol, eta: GLFloat) =
         Vec3(this, "refract(${i.value}, ${n.value}, ${eta.value})")
 
     protected fun shadow2D(sampler: ShadowTexture2D, v: Vec2) = Vec4(this, "shadow2D(${sampler.value}, ${v.value})")

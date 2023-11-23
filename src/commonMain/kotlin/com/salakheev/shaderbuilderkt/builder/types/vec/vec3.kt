@@ -2,6 +2,7 @@ package com.salakheev.shaderbuilderkt.builder.types.vec
 
 import com.salakheev.shaderbuilderkt.builder.ShaderBuilder
 import com.salakheev.shaderbuilderkt.builder.delegates.ComponentDelegate
+import com.salakheev.shaderbuilderkt.builder.instruction.Instruction
 import com.salakheev.shaderbuilderkt.builder.types.Vector
 import com.salakheev.shaderbuilderkt.builder.types.scalar.GLFloat
 import com.salakheev.shaderbuilderkt.builder.types.scalar.floatComponent
@@ -30,6 +31,11 @@ class Vec3(override val builder: ShaderBuilder) : Vector {
     constructor(builder: ShaderBuilder, value: String) : this(builder) {
         this.value = value
     }
+
+    override var name: String? = null
+    override lateinit var defineInstruction: Instruction
+
+    override fun toVec4Expression(): String = "vec4($value, 0.0)"
 
     operator fun times(a: Float) = Vec3(builder, "(${this.value} * ${a.str()})")
     operator fun div(a: Float) = Vec3(builder, "(${this.value} / ${a.str()})")

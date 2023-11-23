@@ -2,6 +2,7 @@ package com.salakheev.shaderbuilderkt.builder.delegates
 
 import com.salakheev.shaderbuilderkt.builder.instruction.Instruction
 import com.salakheev.shaderbuilderkt.builder.instruction.InstructionType
+import com.salakheev.shaderbuilderkt.builder.types.Symbol
 import com.salakheev.shaderbuilderkt.builder.types.Variable
 import kotlin.reflect.KProperty
 
@@ -17,16 +18,22 @@ class ConstructorDelegate<T : Variable>(private val v: T, initialValue: String? 
         val definitionString = "${v.typeName} ${UNUSED_DEFINITION_KEY}${getInitializerExpr(initialValue)}"
         define = Instruction(InstructionType.DEFINE, definitionString)
         v.builder.addInstruction(define)
+        if (v is Symbol) {
+            v.builder.addSymbol(v)
+            v.defineInstruction = define
+        }
     }
 
     operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): ConstructorDelegate<T> {
         v.value = property.name
+        if (v is Symbol) v.name = property.name
         return this
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
         if (!defined) {
             define.result = define.result.replace(UNUSED_DEFINITION_KEY, property.name)
+            if (v is Symbol) v.name = property.name
             defined = true
         }
         return v
@@ -35,6 +42,7 @@ class ConstructorDelegate<T : Variable>(private val v: T, initialValue: String? 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         if (!defined) {
             define.result = define.result.replace(UNUSED_DEFINITION_KEY, property.name)
+            if (v is Symbol) v.name = property.name
             defined = true
         }
         v.builder.addInstruction(Instruction.assign(property.name, value.value))

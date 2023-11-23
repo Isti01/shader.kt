@@ -24,6 +24,12 @@ class SimpleFragmentShader(alphaTest: Boolean, receiveShadow: Boolean) : Debugga
             If(color.w lt alphaTestThreshold) {
                 discard()
             }
+            ElseIf(color.x lt GLFloat(this,"4.0")) {
+                discard()
+            }
+            Else {
+                discard()
+            }
         }
         var brightness by float(1.0f)
         if (receiveShadow) {

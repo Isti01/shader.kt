@@ -28,7 +28,7 @@ abstract class DebuggableShader : ShaderBuilder() {
 
     private fun createDeclarations(): StringBuilder {
         val sb = StringBuilder()
-        uniforms.union(breakpoint.uniforms).forEach {
+        uniforms.forEach {
             sb.append("uniform $it;\n")
         }
         if (sb.isNotBlank()) {

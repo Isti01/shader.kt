@@ -2,11 +2,18 @@ package com.salakheev.shaderbuilderkt.builder.types.scalar
 
 import com.salakheev.shaderbuilderkt.builder.ShaderBuilder
 import com.salakheev.shaderbuilderkt.builder.delegates.ComponentDelegate
+import com.salakheev.shaderbuilderkt.builder.instruction.Instruction
 import com.salakheev.shaderbuilderkt.builder.types.BoolResult
-import com.salakheev.shaderbuilderkt.builder.types.GenType
+import com.salakheev.shaderbuilderkt.builder.types.Symbol
 import com.salakheev.shaderbuilderkt.builder.util.str
 
-class GLFloat(override val builder: ShaderBuilder) : GenType {
+class GLFloat : Symbol {
+
+    override val builder: ShaderBuilder
+
+    constructor(builder: ShaderBuilder) {
+        this.builder = builder
+    }
 
     override val typeName: String = "float"
     override var value: String? = null
@@ -14,6 +21,11 @@ class GLFloat(override val builder: ShaderBuilder) : GenType {
     constructor(builder: ShaderBuilder, value: String) : this(builder) {
         this.value = value
     }
+
+    override var name: String? = null
+    override lateinit var defineInstruction: Instruction
+
+    override fun toVec4Expression(): String = "vec4($value, 0.0, 0.0, 0,0)"
 
     operator fun times(a: Float) = GLFloat(builder, "(${this.value} * ${a.str()})")
     operator fun div(a: Float) = GLFloat(builder, "(${this.value} / ${a.str()})")
