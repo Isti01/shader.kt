@@ -9,7 +9,6 @@ external interface ShaderktAppProps : Props {
 }
 
 val ShaderktApp = FC<ShaderktAppProps> { props ->
-    console.log(props.shader.fragmentShader)
     ShaderOutline { fragmentShader = props.shader.fragmentShader }
     GlSlCode { source = props.shader.fragmentShader }
 }

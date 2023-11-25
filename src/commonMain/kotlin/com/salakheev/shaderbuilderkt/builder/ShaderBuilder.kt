@@ -27,6 +27,7 @@ abstract class ShaderBuilder : ShaderSourceProvider {
 
     val uniforms = HashSet<String>()
     val attributes = HashSet<String>()
+    val attributeNames = HashSet<String>()
     val varyings = HashSet<String>()
     val symbols = ArrayList<Symbol>()
 
@@ -323,6 +324,8 @@ abstract class ShaderBuilder : ShaderSourceProvider {
 
     operator fun Float.minus(a: GLFloat) = GLFloat(a.builder, "(${this.str()} - ${a.value})")
     operator fun Float.plus(a: GLFloat) = GLFloat(a.builder, "(${this.str()} + ${a.value})")
+    operator fun Float.times(a: GLFloat) = GLFloat(a.builder, "(${this.str()} * ${a.value})")
+    operator fun Float.div(a: GLFloat) = GLFloat(a.builder, "(${this.str()} / ${a.value})")
 }
 
 

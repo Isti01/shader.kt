@@ -14,7 +14,6 @@ external interface SymbolsProps : Props {
 }
 
 val Symbols = FC<SymbolsProps> { props ->
-    console.log(props.symbols)
     for (symbol in props.symbols.filter { !it.name.isNullOrBlank() && !it.isUnused() }) {
         div {
             key = symbol.name

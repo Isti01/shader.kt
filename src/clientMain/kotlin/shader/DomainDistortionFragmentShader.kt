@@ -27,26 +27,27 @@ class DomainDistortionFragmentShader : DebuggableShader() {
     private val s by vec3(0.0f, 0.25f, 0.25f)
 
     init {
-        val p by vec2(gl_FragCoord.x / iResolution.x + iTime * 0.1f, gl_FragCoord.y / iResolution.y)
+        val t by float(iTime * 0.1f)
+        val p by vec2(gl_FragCoord.x / iResolution.x + t, gl_FragCoord.y / iResolution.y)
 
         var col by vec3()
         col = pal(p.x, a, a, b, c)
         If(p.y gt (1.0f / 7.0f)) {
-            col = pal(p.x, a, a, b, d)
+            col = pal(p.x- 2.0f * t, a, a, b, d)
         }
-        If(p.y gt (2.0f / 7.0f)) {
+        If(p.y gt (2 / 7.0f)) {
             col = pal(p.x, a, a, b, e)
         }
-        If(p.y gt (3.0f / 7.0f)) {
-            col = pal(p.x, a, a, g, j)
+        If(p.y gt (3 / 7.0f)) {
+            col = pal(p.x- 2.0f * t, a, a, g, j)
         }
-        If(p.y gt (4.0f / 7.0f)) {
+        If(p.y gt (4 / 7.0f)) {
             col = pal(p.x, a, a, k, l)
         }
-        If(p.y gt (5.0f / 7.0f)) {
-            col = pal(p.x, a, a, m, n)
+        If(p.y gt (5 / 7.0f)) {
+            col = pal(p.x- 2.0f * t, a, a, m, n)
         }
-        If(p.y gt (6.0f / 7.0f)) {
+        If(p.y gt (6 / 7.0f)) {
             col = pal(p.x, o, q, r, s)
         }
 

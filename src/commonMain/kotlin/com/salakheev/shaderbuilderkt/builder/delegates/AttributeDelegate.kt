@@ -18,6 +18,7 @@ class AttributeDelegate<T : Variable>(private val factory: (ShaderBuilder) -> T)
 
     operator fun getValue(thisRef: ShaderBuilder, property: KProperty<*>): T {
         thisRef.attributes.add("${v.typeName} ${property.name}")
+        thisRef.attributeNames.add(property.name)
         return v
     }
 }
