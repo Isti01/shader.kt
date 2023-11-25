@@ -17,9 +17,10 @@ abstract class DebuggableShader : ShaderBuilder() {
 
     override fun getSource(): String {
         val sb = StringBuilder()
+        sb.append("precision highp float;\n\n")
         sb.append(createDeclarations())
 
-        sb.append("void main(void) {\n")
+        sb.append("void main() {\n")
         sb.append(createMainBody())
         sb.append("}\n")
 
