@@ -6,9 +6,12 @@ import org.w3c.dom.HTMLCanvasElement
 import react.StrictMode
 import react.create
 import react.dom.client.createRoot
-import runtime.ShaderSimulation
-import shader.DomainDistortionFragmentShader
-import shader.DomainDistortionVertexShader
+import runtime.MeshSimulation
+import runtime.Simulation
+import shader.domain_distortion.DomainDistortionFragmentShader
+import shader.domain_distortion.DomainDistortionVertexShader
+import shader.vertex_color.VertexColorFragmentShader
+import shader.vertex_color.VertexColorVertexShader
 import kotlin.js.Date
 
 fun main() {
@@ -16,9 +19,13 @@ fun main() {
         fragmentShader = DomainDistortionFragmentShader(),
         vertexShader = DomainDistortionVertexShader()
     )
+    val meshColoringProgram = ShaderProgram(
+        vertexShader = VertexColorVertexShader(),
+        fragmentShader = VertexColorFragmentShader()
+    )
     val canvas = document.getElementById("canvas") as HTMLCanvasElement
     val context = canvas.getContext("webgl") as WebGLRenderingContext
-    val sim = ShaderSimulation(context, shaderProgram)
+    val sim = MeshSimulation(context, meshColoringProgram) //ShaderSimulation(context, shaderProgram)
     val date = Date()
     draw(sim, date)
 
@@ -28,7 +35,7 @@ fun main() {
     createRoot(document.getElementById("root")!!).render(app)
 }
 
-fun draw(sim: ShaderSimulation, start: Date) {
+fun draw(sim: Simulation, start: Date) {
     window.requestAnimationFrame {
         sim.init()
         sim.update((Date().getTime() - start.getTime()).toFloat() / 750.0f)

@@ -11,9 +11,9 @@ class ShaderSimulation(gl: WebGLRenderingContext, private val shaderProgram: Sha
     private val repository: DebugUberShaderRepository = DebugUberShaderRepository(gl)
     private lateinit var quad: Mesh
 
-    var time = 0.0f
-    var screenWidth = 1.0f
-    var screeHeight = 1.0f
+    private var time = 0.0f
+    private var screenWidth = 1.0f
+    private var screeHeight = 1.0f
 
 
     override fun init() {

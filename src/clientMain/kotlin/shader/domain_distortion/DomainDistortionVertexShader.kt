@@ -1,4 +1,4 @@
-package shader
+package shader.domain_distortion
 
 import com.salakheev.shaderbuilderkt.builder.debug.DebuggableShader
 import com.salakheev.shaderbuilderkt.builder.types.vec.Vec3

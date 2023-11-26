@@ -1,4 +1,4 @@
-package shader
+package shader.domain_distortion
 
 import com.salakheev.shaderbuilderkt.builder.debug.DebuggableShader
 import com.salakheev.shaderbuilderkt.builder.types.scalar.GLFloat
@@ -32,20 +32,20 @@ class DomainDistortionFragmentShader : DebuggableShader() {
 
         var col by vec3()
         col = pal(p.x, a, a, b, c)
-        If(p.y gt (1.0f / 7.0f)) {
-            col = pal(p.x- 2.0f * t, a, a, b, d)
+        If(p.y gt (1 / 7.0f)) {
+            col = pal(p.x - 2.0f * t, a, a, b, d)
         }
         If(p.y gt (2 / 7.0f)) {
             col = pal(p.x, a, a, b, e)
         }
         If(p.y gt (3 / 7.0f)) {
-            col = pal(p.x- 2.0f * t, a, a, g, j)
+            col = pal(p.x - 2.0f * t, a, a, g, j)
         }
         If(p.y gt (4 / 7.0f)) {
             col = pal(p.x, a, a, k, l)
         }
         If(p.y gt (5 / 7.0f)) {
-            col = pal(p.x- 2.0f * t, a, a, m, n)
+            col = pal(p.x - 2.0f * t, a, a, m, n)
         }
         If(p.y gt (6 / 7.0f)) {
             col = pal(p.x, o, q, r, s)
