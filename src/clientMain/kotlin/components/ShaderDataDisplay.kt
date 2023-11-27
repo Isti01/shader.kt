@@ -12,21 +12,18 @@ external interface ShaderDataDisplayProps : Props {
 }
 
 val ShaderDataDisplay = FC<ShaderDataDisplayProps> { props ->
-    useEffect(props.selectedSimulation, props.simulations) {
-        if (props.selectedSimulation == null && props.simulations.isNotEmpty()) {
-            props.onSelectedSimulationChanged(props.simulations.first())
-        }
-    }
+    val selectedSimulation = props.selectedSimulation
+
     SimulationSelector {
-        selectedSimulation = props.selectedSimulation
+        this.selectedSimulation = selectedSimulation
         simulations = props.simulations
         onSelectedSimulationChanged = props.onSelectedSimulationChanged
     }
-    if (props.selectedSimulation != null) {
-        val shader = props.selectedSimulation?.shaderProgram!!
-        SimulationRunner { simulation = props.selectedSimulation!! }
-        ShaderOutline { fragmentShader = shader.fragmentShader }
-        GlSlCode { source = shader.fragmentShader }
+
+    if (selectedSimulation != null) {
+        SimulationRunner { simulation = selectedSimulation }
+        ShaderOutline { fragmentShader = selectedSimulation.shaderProgram.fragmentShader }
+        GlSlCode { source = selectedSimulation.shaderProgram.fragmentShader }
     }
 }
 

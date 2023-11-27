@@ -25,6 +25,12 @@ val ShaderktApp = FC<ShaderktAppProps> { props ->
         }
     }
 
+    useEffect(selectedSimulation, simulations) {
+        if (selectedSimulation == null && simulations?.isNotEmpty() == true) {
+            selectedSimulation = simulations!!.first()
+        }
+    }
+
     if (simulations != null) {
         ShaderDataDisplay {
             this.selectedSimulation = selectedSimulation
