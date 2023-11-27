@@ -3,6 +3,7 @@ package components
 import kotlinx.browser.window
 import react.FC
 import react.Props
+import react.useContext
 import react.useEffect
 import runtime.Simulation
 import kotlin.js.Date
@@ -12,9 +13,10 @@ external interface SimulationRunnerProps : Props {
 }
 
 val SimulationRunner = FC<SimulationRunnerProps> { props ->
-    useEffect(props.simulation) {
+    val paused = useContext(PauseContext)
+    useEffect(props.simulation, paused) {
+        if (paused) return@useEffect
         var keepRunning = true
-        props.simulation.init()
         runSimulation(props.simulation, Date()) { keepRunning }
         cleanup { keepRunning = false }
     }

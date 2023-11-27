@@ -19,7 +19,9 @@ val ShaderktApp = FC<ShaderktAppProps> { props ->
         val canvas = canvasRef.current
         if (canvas != null) {
             val gl = canvas.getContext("webgl") as WebGLRenderingContext
-            simulations = props.simulationProviders.map { it(gl) }
+            val newSimulations = props.simulationProviders.map { it(gl) }
+            newSimulations.forEach { it.init() }
+            simulations = newSimulations
         }
     }
 

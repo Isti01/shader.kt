@@ -17,6 +17,11 @@ val ShaderDataDisplay = FC<ShaderDataDisplayProps> { props ->
             props.onSelectedSimulationChanged(props.simulations.first())
         }
     }
+    SimulationSelector {
+        selectedSimulation = props.selectedSimulation
+        simulations = props.simulations
+        onSelectedSimulationChanged = props.onSelectedSimulationChanged
+    }
     if (props.selectedSimulation != null) {
         val shader = props.selectedSimulation?.shaderProgram!!
         SimulationRunner { simulation = props.selectedSimulation!! }
