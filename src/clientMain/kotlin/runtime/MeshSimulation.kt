@@ -8,12 +8,13 @@ import runtime.math.Matrix4x4
 import runtime.mesh.Mesh
 import runtime.mesh.VertexBuffer
 
-class MeshSimulation(gl: WebGLRenderingContext, private val shaderProgram: ShaderProgram) : Simulation(gl) {
+class MeshSimulation(gl: WebGLRenderingContext, shaderProgram: ShaderProgram) : Simulation(gl, shaderProgram, "Mesh") {
     private val repository: DebugUberShaderRepository = DebugUberShaderRepository(gl)
     private lateinit var quad: Mesh
 
     private var time = 0.0f
-
+    private var screenWidth = 1
+    private var screenHeight = 1
     override fun init() {
         val coords = arrayOf(
             -1.0f, -1.0f, -1.0f,
@@ -61,12 +62,14 @@ class MeshSimulation(gl: WebGLRenderingContext, private val shaderProgram: Shade
         quad = Mesh.create(vertexData, gl) ?: throw IllegalStateException("Could not initialize simulation")
     }
 
-    override fun update(time: Float) {
-        this.time = time
+    override fun update(deltaTime: Float) {
+        time += deltaTime
+        screenWidth = gl.canvas.width
+        screenHeight = gl.canvas.height
     }
 
-    override fun render() {
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+    override fun renderImpl() {
+        gl.viewport(0, 0, screenWidth, screenHeight)
         gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f)
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT or WebGLRenderingContext.DEPTH_BUFFER_BIT)
         gl.enable(WebGLRenderingContext.DEPTH_TEST)

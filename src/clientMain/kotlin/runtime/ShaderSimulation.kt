@@ -7,13 +7,13 @@ import org.khronos.webgl.WebGLRenderingContext.Companion.FLOAT
 import runtime.mesh.Mesh
 import runtime.mesh.VertexBuffer
 
-class ShaderSimulation(gl: WebGLRenderingContext, private val shaderProgram: ShaderProgram) : Simulation(gl) {
+class ShaderSimulation(gl: WebGLRenderingContext, shaderProgram: ShaderProgram) : Simulation(gl, shaderProgram, "Art") {
     private val repository: DebugUberShaderRepository = DebugUberShaderRepository(gl)
     private lateinit var quad: Mesh
 
     private var time = 0.0f
-    private var screenWidth = 1.0f
-    private var screeHeight = 1.0f
+    private var screenWidth = 1
+    private var screeHeight = 1
 
 
     override fun init() {
@@ -31,14 +31,14 @@ class ShaderSimulation(gl: WebGLRenderingContext, private val shaderProgram: Sha
         quad = Mesh.create(vertexData, gl) ?: throw IllegalStateException("Could not initialize simulation")
     }
 
-    override fun update(time: Float) {
-        this.time = time
-        screenWidth = gl.canvas.width.toFloat()
-        screeHeight = gl.canvas.height.toFloat()
+    override fun update(deltaTime: Float) {
+        time += deltaTime
+        screenWidth = gl.canvas.width
+        screeHeight = gl.canvas.height
     }
 
-    override fun render() {
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+    override fun renderImpl() {
+        gl.viewport(0, 0, screenWidth, screeHeight)
         gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f)
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT or WebGLRenderingContext.DEPTH_BUFFER_BIT)
 
@@ -49,7 +49,7 @@ class ShaderSimulation(gl: WebGLRenderingContext, private val shaderProgram: Sha
         val timeLocation = gl.getUniformLocation(program, "iTime")
         val resolutionLocation = gl.getUniformLocation(program, "iResolution")
         gl.uniform1f(timeLocation, time)
-        gl.uniform2f(resolutionLocation, screenWidth, screeHeight)
+        gl.uniform2f(resolutionLocation, screenWidth.toFloat(), screeHeight.toFloat())
 
         quad.render(gl, program)
     }
