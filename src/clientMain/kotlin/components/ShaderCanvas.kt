@@ -1,6 +1,5 @@
 package components
 
-import csstype.ClassName
 import org.w3c.dom.HTMLCanvasElement
 import react.FC
 import react.MutableRefObject
