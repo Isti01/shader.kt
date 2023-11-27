@@ -2,6 +2,7 @@ package components
 
 import react.FC
 import react.Props
+import react.useContext
 import react.useEffect
 import runtime.Simulation
 
@@ -12,9 +13,14 @@ external interface ShaderDataDisplayProps : Props {
 }
 
 val ShaderDataDisplay = FC<ShaderDataDisplayProps> { props ->
+    val setBreakpointLine = useContext(SetBreakpointContext)
     val selectedSimulation = props.selectedSimulation
 
-    SimulationSelector {
+    useEffect(selectedSimulation) {
+        setBreakpointLine(null)
+    }
+
+    SimulationSettings {
         this.selectedSimulation = selectedSimulation
         simulations = props.simulations
         onSelectedSimulationChanged = props.onSelectedSimulationChanged

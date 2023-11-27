@@ -5,8 +5,10 @@ import csstype.px
 import emotion.react.css
 import react.FC
 import react.Props
+import react.dom.html.ReactHTML.details
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.strong
+import react.dom.html.ReactHTML.summary
 import react.key
 
 external interface SymbolsProps : Props {
@@ -14,16 +16,23 @@ external interface SymbolsProps : Props {
 }
 
 val Symbols = FC<SymbolsProps> { props ->
-    for (symbol in props.symbols.filter { !it.name.isNullOrBlank() && !it.isUnused() }) {
+    details {
+        summary {
+            +"Shader symbols"
+        }
         div {
-            key = symbol.name
-            css {
-                padding = 5.px
+            for (symbol in props.symbols.filter { !it.name.isNullOrBlank() && !it.isUnused() }) {
+                div {
+                    key = symbol.name
+                    css {
+                        padding = 5.px
+                    }
+                    strong {
+                        +symbol.typeName
+                    }
+                    +" ${symbol.name}"
+                }
             }
-            strong {
-                +symbol.typeName
-            }
-            +" ${symbol.name}"
         }
     }
 }

@@ -28,7 +28,8 @@ private fun runSimulation(simulation: Simulation, lastFrameTime: Date, keepRunni
         if (!keepRunning()) return@requestAnimationFrame
         val currentTime = Date()
 
-        simulation.update((currentTime.getTime() - lastFrameTime.getTime()).toFloat() / 1000.0f)
+        val deltaTime = (currentTime.getTime() - lastFrameTime.getTime()).toFloat() / 1000.0f
+        simulation.update(deltaTime)
         simulation.render()
 
         runSimulation(simulation, currentTime, keepRunning)

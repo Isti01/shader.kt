@@ -9,10 +9,10 @@ external interface ShaderOutlineProps : Props {
 }
 
 val ShaderOutline = FC<ShaderOutlineProps> { props ->
-    Symbols {
-        symbols = props.fragmentShader.symbols
-    }
     Instructions {
         instructions = props.fragmentShader.instructions
+    }
+    Symbols {
+        symbols = props.fragmentShader.symbols
     }
 }
