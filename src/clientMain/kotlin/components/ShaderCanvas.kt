@@ -1,6 +1,5 @@
 package components
 
-import kotlinx.js.Symbol
 import org.khronos.webgl.Uint8Array
 import org.khronos.webgl.Uint8ClampedArray
 import org.w3c.dom.CanvasRenderingContext2D
@@ -27,10 +26,7 @@ val ShaderCanvas = FC<ShaderCanvasProps> { props ->
     }
 
     for (data in debugData?.results ?: emptyList()) {
-        TextureDisplay {
-            key = data.id.toString()
-            imageData = data.data
-        }
+        TextureDisplay { imageData = data.data }
     }
 }
 
@@ -41,7 +37,7 @@ external interface TextureDisplayProps : Props {
 val TextureDisplay = FC<TextureDisplayProps> { props ->
     val canvasRef = useRef<HTMLCanvasElement>()
 
-    useLayoutEffect(canvasRef.current) {
+    useLayoutEffect(canvasRef.current, props.imageData) {
         val canvas = canvasRef.current
         if (canvas != null) {
             val context = canvas.getContext("2d") as CanvasRenderingContext2D
