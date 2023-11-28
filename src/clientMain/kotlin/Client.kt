@@ -1,4 +1,7 @@
 import com.salakheev.shaderbuilderkt.ShaderProgram
+import components.BreakpointProvider
+import components.DebugDataProvider
+import components.PauseContextProvider
 import kotlinx.browser.document
 import org.khronos.webgl.WebGLRenderingContext
 import react.StrictMode
@@ -28,7 +31,13 @@ fun main() {
     )
 
     val app = StrictMode.create {
-        ShaderktApp { this.simulationProviders = providers }
+        PauseContextProvider {
+            BreakpointProvider {
+                DebugDataProvider {
+                    ShaderktApp { this.simulationProviders = providers }
+                }
+            }
+        }
     }
 
     createRoot(document.getElementById("root")!!).render(app)

@@ -35,7 +35,7 @@ class Vec3(override val builder: ShaderBuilder) : Vector {
     override var name: String? = null
     override lateinit var defineInstruction: Instruction
 
-    override fun toVec4Expression(): String = "vec4($value, 0.0)"
+    override fun toVec4Expression(): String = "vec4($value, 1.0)"
 
     operator fun times(a: Float) = Vec3(builder, "(${this.value} * ${a.str()})")
     operator fun div(a: Float) = Vec3(builder, "(${this.value} / ${a.str()})")

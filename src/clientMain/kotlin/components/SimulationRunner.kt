@@ -1,26 +1,37 @@
 package components
 
 import kotlinx.browser.window
-import react.FC
-import react.Props
-import react.useContext
-import react.useEffect
+import react.*
 import runtime.Simulation
+import runtime.debug.DebugData
 import kotlin.js.Date
 
 val SimulationRunner = FC<Props> { props ->
     val paused = useContext(PauseContext)
     val simulation = useContext(SimulationContext)
-    useEffect(simulation, paused) {
+    val breakpoint = useContext(BreakpointContext)
+    val setDebugData = useContext(SetDebugDataContext)
+
+    useEffect(simulation, paused, breakpoint, setDebugData) {
         if (paused || simulation == null) return@useEffect
         var keepRunning = true
-        runSimulation(simulation, Date()) { keepRunning }
+        runSimulation(simulation, breakpoint, setDebugData, Date()) { keepRunning }
         cleanup { keepRunning = false }
     }
 }
 
-private fun runSimulation(simulation: Simulation, lastFrameTime: Date, keepRunning: () -> Boolean) {
+private fun runSimulation(
+    simulation: Simulation,
+    breakpoint: Int?,
+    setDebugData: StateSetter<DebugData?>,
+    lastFrameTime: Date,
+    keepRunning: () -> Boolean
+) {
     if (!keepRunning()) return
+    if (breakpoint != null) {
+        val data = simulation.gatherDebugData(breakpoint)
+        setDebugData(data)
+    }
     window.requestAnimationFrame {
         if (!keepRunning()) return@requestAnimationFrame
         val currentTime = Date()
@@ -29,6 +40,6 @@ private fun runSimulation(simulation: Simulation, lastFrameTime: Date, keepRunni
         simulation.update(deltaTime)
         simulation.render()
 
-        runSimulation(simulation, currentTime, keepRunning)
+        runSimulation(simulation, breakpoint, setDebugData, currentTime, keepRunning)
     }
 }

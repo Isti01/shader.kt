@@ -13,7 +13,8 @@ val BreakpointEvaluator = FC<Props> { props ->
 
     useEffect(breakpoint, simulation) {
         if (breakpoint != null && simulation != null) {
-            setDebugData(simulation.gatherDebugData(breakpoint))
+            val data = simulation.gatherDebugData(breakpoint)
+            setDebugData(data)
         }
     }
 }

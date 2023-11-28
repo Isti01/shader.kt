@@ -1,4 +1,6 @@
-import components.*
+import components.ShaderCanvas
+import components.ShaderDataDisplay
+import components.SimulationProvider
 import csstype.ClassName
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
@@ -28,15 +30,9 @@ val ShaderktApp = FC<ShaderktAppProps> { props ->
     ReactHTML.main {
         className = ClassName("shader-display")
         if (simulations != null) {
-            PauseContextProvider {
-                BreakpointProvider {
-                    DebugDataProvider {
-                        SimulationProvider {
-                            this.simulations = simulations!!
-                            ShaderDataDisplay { this.simulations = simulations!! }
-                        }
-                    }
-                }
+            SimulationProvider {
+                this.simulations = simulations!!
+                ShaderDataDisplay { this.simulations = simulations!! }
             }
         }
     }

@@ -29,9 +29,13 @@ abstract class Simulation(protected val gl: WebGLRenderingContext, val shaderPro
     }
 
     fun gatherDebugData(breakpoint: Int): DebugData {
-        val texture = createTexture(gl, gl.canvas.width, gl.canvas.height) ?: return DebugData.empty()
-        val framebuffer = createFrameBuffer(gl, texture)
+        val width = gl.canvas.width
+        val height = gl.canvas.height
+        val texture = createTexture(gl, width, height) ?: return DebugData.empty()
+        val depthBuffer = gl.createRenderbuffer()
+        val framebuffer = createFrameBuffer(gl, depthBuffer, width, height, texture)
         if (framebuffer == null) {
+            if (depthBuffer != null) gl.deleteRenderbuffer(depthBuffer)
             gl.deleteTexture(texture)
             return DebugData.empty()
         }
@@ -43,6 +47,7 @@ abstract class Simulation(protected val gl: WebGLRenderingContext, val shaderPro
         }
 
         gl.deleteFramebuffer(framebuffer)
+        gl.deleteRenderbuffer(depthBuffer)
         gl.deleteTexture(texture)
 
         return DebugData(results)
