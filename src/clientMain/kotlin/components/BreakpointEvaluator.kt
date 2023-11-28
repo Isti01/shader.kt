@@ -15,6 +15,8 @@ val BreakpointEvaluator = FC<Props> { props ->
         if (breakpoint != null && simulation != null) {
             val data = simulation.gatherDebugData(breakpoint)
             setDebugData(data)
+        } else {
+            setDebugData(null)
         }
     }
 }

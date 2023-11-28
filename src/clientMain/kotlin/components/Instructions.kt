@@ -26,7 +26,7 @@ val Instructions = FC<InstructionsProps> { props ->
         +"Shader instructions"
     }
     p {
-        +"Click to place a breakpoint"
+        +"Place a breakpoint"
     }
     code {
         pre {
