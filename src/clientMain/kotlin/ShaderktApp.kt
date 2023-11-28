@@ -1,7 +1,4 @@
-import components.BreakpointProvider
-import components.SetPauseContext
-import components.ShaderCanvas
-import components.ShaderDataDisplay
+import components.*
 import csstype.ClassName
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
@@ -15,13 +12,10 @@ external interface ShaderktAppProps : Props {
 }
 
 val ShaderktApp = FC<ShaderktAppProps> { props ->
-    var selectedSimulation by useState<Simulation?>(null)
-    val setPaused = useContext(SetPauseContext)
     val canvasRef = useRef<HTMLCanvasElement>()
     var simulations by useState<List<Simulation>?>(null)
 
     useLayoutEffect(props.simulationProviders, canvasRef.current) {
-        selectedSimulation = null
         val canvas = canvasRef.current
         if (canvas != null) {
             val gl = canvas.getContext("webgl") as WebGLRenderingContext
@@ -31,23 +25,16 @@ val ShaderktApp = FC<ShaderktAppProps> { props ->
         }
     }
 
-    useEffect(selectedSimulation, simulations) {
-        if (selectedSimulation == null && simulations?.isNotEmpty() == true) {
-            selectedSimulation = simulations!!.first()
-        }
-    }
-
-
     ReactHTML.main {
         className = ClassName("shader-display")
         if (simulations != null) {
-            BreakpointProvider {
-                ShaderDataDisplay {
-                    this.selectedSimulation = selectedSimulation
-                    this.simulations = simulations!!
-                    onSelectedSimulationChanged = {
-                        selectedSimulation = it
-                        setPaused(false)
+            PauseContextProvider {
+                BreakpointProvider {
+                    DebugDataProvider {
+                        SimulationProvider {
+                            this.simulations = simulations!!
+                            ShaderDataDisplay { this.simulations = simulations!! }
+                        }
                     }
                 }
             }

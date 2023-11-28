@@ -8,16 +8,13 @@ import react.useEffect
 import runtime.Simulation
 import kotlin.js.Date
 
-external interface SimulationRunnerProps : Props {
-    var simulation: Simulation
-}
-
-val SimulationRunner = FC<SimulationRunnerProps> { props ->
+val SimulationRunner = FC<Props> { props ->
     val paused = useContext(PauseContext)
-    useEffect(props.simulation, paused) {
-        if (paused) return@useEffect
+    val simulation = useContext(SimulationContext)
+    useEffect(simulation, paused) {
+        if (paused || simulation == null) return@useEffect
         var keepRunning = true
-        runSimulation(props.simulation, Date()) { keepRunning }
+        runSimulation(simulation, Date()) { keepRunning }
         cleanup { keepRunning = false }
     }
 }

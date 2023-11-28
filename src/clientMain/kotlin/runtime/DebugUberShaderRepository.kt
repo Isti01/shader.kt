@@ -33,8 +33,11 @@ class DebugUberShaderRepository(private val gl: WebGLRenderingContext) {
             return null
         }
 
-        gl.attachShader(program, getCachedShader(WebGLRenderingContext.VERTEX_SHADER, vertexSource))
-        gl.attachShader(program, getCachedShader(WebGLRenderingContext.FRAGMENT_SHADER, fragmentSource))
+        val vertexShader = getCachedShader(WebGLRenderingContext.VERTEX_SHADER, vertexSource) ?: return null
+        gl.attachShader(program, vertexShader)
+
+        val fragmentShader = getCachedShader(WebGLRenderingContext.FRAGMENT_SHADER, fragmentSource) ?: return null
+        gl.attachShader(program, fragmentShader)
         gl.linkProgram(program)
 
         val success = gl.getProgramParameter(program, WebGLRenderingContext.LINK_STATUS)

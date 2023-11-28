@@ -15,13 +15,13 @@ import react.useState
 import runtime.Simulation
 
 external interface SimulationSettingsProps : Props {
-    var selectedSimulation: Simulation?
     var simulations: List<Simulation>
-    var onSelectedSimulationChanged: (Simulation) -> Unit
 }
 
 val SimulationSettings = FC<SimulationSettingsProps> { props ->
-    var selectedSimulationIndex by useState(getIndexOrNull(props.simulations, props.selectedSimulation))
+    val selectedSimulation = useContext(SimulationContext)
+    val setSelectedSimulation = useContext(SetSimulationContext)
+    var selectedSimulationIndex by useState(getIndexOrNull(props.simulations, selectedSimulation))
     val setPaused = useContext(SetPauseContext)
     val paused = useContext(PauseContext)
     div {
@@ -38,7 +38,7 @@ val SimulationSettings = FC<SimulationSettingsProps> { props ->
                 onChange = {
                     val index = it.target.value
                     selectedSimulationIndex = index
-                    props.onSelectedSimulationChanged(props.simulations[index.toInt()])
+                    setSelectedSimulation(props.simulations[index.toInt()])
                 }
                 for ((i, simulation) in props.simulations.withIndex()) {
                     option {

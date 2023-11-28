@@ -13,8 +13,7 @@ class MeshSimulation(gl: WebGLRenderingContext, shaderProgram: ShaderProgram) : 
     private lateinit var quad: Mesh
 
     private var time = 0.0f
-    private var screenWidth = 1
-    private var screenHeight = 1
+
     override fun init() {
         val coords = arrayOf(
             -1.0f, -1.0f, -1.0f,
@@ -68,19 +67,19 @@ class MeshSimulation(gl: WebGLRenderingContext, shaderProgram: ShaderProgram) : 
         screenHeight = gl.canvas.height
     }
 
-    override fun renderImpl() {
+    override fun renderImpl(): Boolean {
         gl.viewport(0, 0, screenWidth, screenHeight)
         gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f)
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT or WebGLRenderingContext.DEPTH_BUFFER_BIT)
         gl.enable(WebGLRenderingContext.DEPTH_TEST)
 
-        val program = repository.getProgram(shaderProgram)
-            ?: throw IllegalStateException("Could not retrieve shader for rendering")
+        val program = repository.getProgram(shaderProgram) ?: return false
 
         gl.useProgram(program)
         val mvp = gl.getUniformLocation(program, "mvp")
         gl.uniformMatrix4fv(mvp, false, Matrix4x4.rotate(.3f + time / 7f, time / 2f, 1 + time / 11f).data)
 
         quad.render(gl, program)
+        return true
     }
 }

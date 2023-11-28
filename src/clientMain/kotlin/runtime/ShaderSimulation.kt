@@ -12,8 +12,6 @@ class ShaderSimulation(gl: WebGLRenderingContext, shaderProgram: ShaderProgram) 
     private lateinit var quad: Mesh
 
     private var time = 0.0f
-    private var screenWidth = 1
-    private var screeHeight = 1
 
 
     override fun init() {
@@ -34,23 +32,23 @@ class ShaderSimulation(gl: WebGLRenderingContext, shaderProgram: ShaderProgram) 
     override fun update(deltaTime: Float) {
         time += deltaTime
         screenWidth = gl.canvas.width
-        screeHeight = gl.canvas.height
+        screenHeight = gl.canvas.height
     }
 
-    override fun renderImpl() {
-        gl.viewport(0, 0, screenWidth, screeHeight)
+    override fun renderImpl(): Boolean {
+        gl.viewport(0, 0, screenWidth, screenHeight)
         gl.clearColor(0.0f, 0.0f, 0.0f, 0.0f)
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT or WebGLRenderingContext.DEPTH_BUFFER_BIT)
 
-        val program = repository.getProgram(shaderProgram)
-            ?: throw IllegalStateException("Could not retrieve shader for rendering")
+        val program = repository.getProgram(shaderProgram) ?: return false
 
         gl.useProgram(program)
         val timeLocation = gl.getUniformLocation(program, "iTime")
         val resolutionLocation = gl.getUniformLocation(program, "iResolution")
         gl.uniform1f(timeLocation, time)
-        gl.uniform2f(resolutionLocation, screenWidth.toFloat(), screeHeight.toFloat())
+        gl.uniform2f(resolutionLocation, screenWidth.toFloat(), screenHeight.toFloat())
 
         quad.render(gl, program)
+        return true
     }
 }
