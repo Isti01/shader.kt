@@ -4,9 +4,14 @@ import org.khronos.webgl.Uint8Array
 import org.khronos.webgl.Uint8ClampedArray
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
+import org.w3c.dom.events.EventListener
+import org.w3c.dom.events.MouseEvent
 import react.*
 import react.dom.html.ReactHTML.canvas
 import react.dom.html.ReactHTML.h1
+
+const val CANVAS_WIDTH = 450
+const val CANVAS_HEIGHT = 450
 
 
 external interface ShaderCanvasProps : Props {
@@ -15,18 +20,37 @@ external interface ShaderCanvasProps : Props {
 
 val ShaderCanvas = FC<ShaderCanvasProps> { props ->
     val debugData = useContext(DebugDataContext)
+    val canvasElement = props.canvasRef.current
+    val setSelectedPixel = useContext(SetSelectedPixelContext)
+    val showDebugTextures = useContext(ShowDebugTextureContext)
+
+    useEffect(canvasElement) {
+        if (canvasElement == null) return@useEffect
+        val clickListener = EventListener {
+            val pointerEvent = it as MouseEvent
+            val point = Point(pointerEvent.offsetX.toInt(), pointerEvent.offsetY.toInt())
+            setSelectedPixel(point)
+        }
+        canvasElement.addEventListener("click", clickListener)
+
+        cleanup {
+            canvasElement.removeEventListener("click", clickListener)
+        }
+    }
 
     h1 {
         +"Preview"
     }
     canvas {
         ref = props.canvasRef
-        width = 450.0
-        height = 450.0
+        width = CANVAS_WIDTH.toDouble()
+        height = CANVAS_HEIGHT.toDouble()
     }
 
-    for (data in debugData?.results ?: emptyList()) {
-        TextureDisplay { imageData = data.data }
+    if (showDebugTextures) {
+        for (data in debugData?.results ?: emptyList()) {
+            TextureDisplay { imageData = data.data }
+        }
     }
 }
 
@@ -49,7 +73,7 @@ val TextureDisplay = FC<TextureDisplayProps> { props ->
 
     canvas {
         ref = canvasRef
-        width = 450.0
-        height = 450.0
+        width = CANVAS_WIDTH.toDouble()
+        height = CANVAS_HEIGHT.toDouble()
     }
 }

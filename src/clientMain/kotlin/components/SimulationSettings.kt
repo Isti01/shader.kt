@@ -24,6 +24,9 @@ val SimulationSettings = FC<SimulationSettingsProps> { props ->
     var selectedSimulationIndex by useState(getIndexOrNull(props.simulations, selectedSimulation))
     val setPaused = useContext(SetPauseContext)
     val paused = useContext(PauseContext)
+
+    val showDebugTextures = useContext(ShowDebugTextureContext)
+    val setShowDebugTextures = useContext(SetShowDebugTextureContext)
     div {
         h1 {
             +"Simulation settings"
@@ -50,6 +53,10 @@ val SimulationSettings = FC<SimulationSettingsProps> { props ->
             button {
                 onClick = { setPaused(!paused) }
                 +(if (paused) "Resume simulation" else "Pause simulation")
+            }
+            button {
+                onClick = { setShowDebugTextures(!showDebugTextures) }
+                +(if (showDebugTextures) "Hide Debug Textures" else "Show Debug Textures")
             }
         }
     }

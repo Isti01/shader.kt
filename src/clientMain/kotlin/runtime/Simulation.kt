@@ -43,7 +43,8 @@ abstract class Simulation(protected val gl: WebGLRenderingContext, val shaderPro
         val results = ArrayList<DebugExecutionResult>()
         for (symbol in shaderProgram.fragmentShader.symbols.filter { it.name?.isNotBlank() == true }) {
             val result = getDebugResult(breakpoint, symbol, framebuffer, texture) ?: continue
-            results.add(DebugExecutionResult(symbol.name!!, symbol.typeName, result))
+            val data = flipBuffer(result, width, height)
+            results.add(DebugExecutionResult(symbol.name!!, symbol.typeName, data))
         }
 
         gl.deleteFramebuffer(framebuffer)
@@ -51,6 +52,20 @@ abstract class Simulation(protected val gl: WebGLRenderingContext, val shaderPro
         gl.deleteTexture(texture)
 
         return DebugData(results)
+    }
+
+    private fun flipBuffer(result: Uint8Array, width: Int, height: Int): Uint8Array {
+        val flipped = Uint8Array(result.length)
+        val row = width * 4
+        val end = (height - 1) * row
+
+        var i = 0
+        while (i < result.length) {
+            flipped.set(result.subarray(i, i + row), end - i)
+            i += row
+        }
+
+        return flipped
     }
 
     private fun getDebugResult(

@@ -15,15 +15,19 @@ val SimulationProvider = FC<SimulationProviderProps> { props ->
     val setPaused = useContext(SetPauseContext)
     val setBreakpoint = useContext(SetBreakpointContext)
     val setDebugData = useContext(SetDebugDataContext)
+    val setSelectedPixel = useContext(SetSelectedPixelContext)
+
     val setSimulation = useCallback<(Simulation?) -> Unit>(
         simulation.component2(),
         setPaused,
         setBreakpoint,
-        setDebugData
+        setDebugData,
+        setSelectedPixel
     ) {
         setBreakpoint(null)
         setDebugData(null)
         setPaused(false)
+        setSelectedPixel(null)
         simulation.component2()(it)
     }
 

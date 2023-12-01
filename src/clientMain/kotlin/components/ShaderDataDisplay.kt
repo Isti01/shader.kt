@@ -1,8 +1,6 @@
 package components
 
-import react.FC
-import react.Props
-import react.useContext
+import react.*
 import runtime.Simulation
 
 external interface ShaderDataDisplayProps : Props {
