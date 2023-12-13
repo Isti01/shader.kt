@@ -233,6 +233,9 @@ abstract class ShaderBuilder : ShaderSourceProvider {
     protected fun smoothstep(v: GLFloat, u: GLFloat, x: GLFloat) =
         GLFloat(this, "smoothstep(${v.value}, ${u.value}, ${x.value})")
 
+    protected fun smoothstep(v: Float, u: Float, x: GLFloat) =
+        GLFloat(this, "smoothstep(${v.str()}, ${u.str()}, ${x.value})")
+
     protected fun smoothstep(v: Vec2, u: Vec2, x: Vec2) = Vec2(this, "smoothstep(${v.value}, ${u.value}, ${x.value})")
     protected fun smoothstep(v: Vec3, u: Vec3, x: Vec3) = Vec3(this, "smoothstep(${v.value}, ${u.value}, ${x.value})")
     protected fun smoothstep(v: Vec4, u: Vec4, x: Vec4) = Vec4(this, "smoothstep(${v.value}, ${u.value}, ${x.value})")

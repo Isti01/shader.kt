@@ -8,7 +8,11 @@ import runtime.math.Matrix4x4
 import runtime.mesh.Mesh
 import runtime.mesh.VertexBuffer
 
-class MeshSimulation(gl: WebGLRenderingContext, shaderProgram: ShaderProgram) : Simulation(gl, shaderProgram, "Mesh") {
+class MeshSimulation(
+    gl: WebGLRenderingContext,
+    shaderProgram: ShaderProgram,
+    name: String,
+) : Simulation(gl, shaderProgram, name) {
     private val repository: DebugUberShaderRepository = DebugUberShaderRepository(gl)
     private lateinit var quad: Mesh
 

@@ -10,6 +10,8 @@ import runtime.ShaderSimulation
 import runtime.Simulation
 import shader.domain_distortion.DomainDistortionFragmentShader
 import shader.domain_distortion.DomainDistortionVertexShader
+import shader.signed_distance_functions.SdfFragmentShader
+import shader.signed_distance_functions.SdfVertexShader
 import shader.vertex_color.VertexColorFragmentShader
 import shader.vertex_color.VertexColorVertexShader
 
@@ -22,10 +24,15 @@ fun main() {
         vertexShader = VertexColorVertexShader(),
         fragmentShader = VertexColorFragmentShader()
     )
+    val sdfProgram = ShaderProgram(
+        vertexShader = SdfVertexShader(),
+        fragmentShader = SdfFragmentShader()
+    )
 
     val providers = listOf<(WebGLRenderingContext) -> Simulation>(
-        { MeshSimulation(it, meshColoringProgram) },
-        { ShaderSimulation(it, domainDistortionProgram) }
+        { ShaderSimulation(it, sdfProgram, "Signed distance function") },
+        { MeshSimulation(it, meshColoringProgram, "Mesh with vertex coloring") },
+        { ShaderSimulation(it, domainDistortionProgram, "Domain distortion effect") },
     )
 
     val app = StrictMode.create {
