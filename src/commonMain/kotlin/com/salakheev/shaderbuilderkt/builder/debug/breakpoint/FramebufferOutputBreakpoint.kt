@@ -29,17 +29,14 @@ data class FramebufferOutputBreakpoint(val instructionIndex: Int, val variableTo
                 }
 
             }
-            yield(getBreakpointInstruction())
             if (scopeLevel > 0) {
                 for (i in 0..<scopeLevel) {
                     yield(Instruction(InstructionType.ENDIF))
                 }
-                yield(getEmptyOutputInstruction())
             }
+            yield(getBreakpointInstruction())
         }.asIterable()
 
     private fun getBreakpointInstruction() =
         Instruction(InstructionType.ASSIGN, "$FRAG_COLOR_VARIABLE = (${variableToOutput.toVec4Expression()})")
-
-    private fun getEmptyOutputInstruction() = Instruction(InstructionType.ASSIGN, EMPTY_OUTPUT_EXPRESSION)
 }
