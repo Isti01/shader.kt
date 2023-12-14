@@ -1,5 +1,8 @@
 package components
 
+import csstype.Position
+import csstype.px
+import emotion.react.css
 import org.khronos.webgl.Uint8Array
 import org.khronos.webgl.Uint8ClampedArray
 import org.w3c.dom.CanvasRenderingContext2D
@@ -45,6 +48,10 @@ val ShaderCanvas = FC<ShaderCanvasProps> { props ->
         ref = props.canvasRef
         width = CANVAS_WIDTH.toDouble()
         height = CANVAS_HEIGHT.toDouble()
+        css {
+            position = if (showDebugTextures) null else Position.sticky
+            top = 24.px
+        }
     }
 
     if (showDebugTextures) {
